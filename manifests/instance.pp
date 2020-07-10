@@ -227,7 +227,7 @@ define redis::instance (
   Stdlib::Filemode $log_dir_mode                                 = $redis::log_dir_mode,
   Redis::LogLevel $log_level                                     = $redis::log_level,
   String[1] $minimum_version                                     = $redis::minimum_version,
-  Optional[String[1]] $masterauth                                = $redis::masterauth,
+  Optional[Sensitive] $masterauth                                = $redis::masterauth,
   Integer[1] $maxclients                                         = $redis::maxclients,
   $maxmemory                                                     = $redis::maxmemory,
   $maxmemory_policy                                              = $redis::maxmemory_policy,
@@ -404,6 +404,6 @@ define redis::instance (
 
   $supports_protected_mode = !$redis_version_real or versioncmp($redis_version_real, '3.2.0') >= 0
 
-  File[$redis_file_name_orig] { content => template($conf_template) }
+  File[$redis_file_name_orig] { content => template($conf_template).node_encrypt::secret }
 
 }
